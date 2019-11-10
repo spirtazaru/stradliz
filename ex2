@@ -1,0 +1,56 @@
+#include <iostream>
+
+using namespace std;
+
+bool prime(int p)
+{
+    if (p <= 0)
+        return false;
+    for (int i = 2; i*i <= p; i++)
+        if (p % i == 0)
+            return false;
+    return true;
+}
+
+int delete_annoying_primes(int d, int* &Array)
+{
+    bool* todel = new bool[d];
+    for (int i = 0; i < d; i++)
+        todel[i] = false;
+        
+    for (int i = 0; i < d; i++)
+        for (int j = i; j >= 0; j--)
+            if (i != j && prime(Array[i]) && Array[i] == Array[j])
+                todel[i] = todel[j] = true;
+    
+    int dup = 0;
+    for (int i = 0; i < d; i++)
+        if(todel[i])
+            dup++;
+            
+    int* b = new int[d - dup];
+    int cnt = 0;
+    for (int i = 0; i < d; i++)
+        if (!todel[i])
+            b[cnt++] = Array[i];
+            
+    Array = new int[d - dup];
+    for (int i = 0; i < d - dup; i++)
+        Array[i] = b[i];
+        
+    delete [] todel;
+    return d - dup;
+}
+
+int main() {
+    int d;
+    cin >> d;
+    int* Array = new int[d];
+    for (int i = 0; i < d; i++)
+        cin >> Array[i];
+    d = delete_annoying_primes(d, Array);
+    for (int i = 0; i < d; i++)
+        cout << Array[i] << " ";
+    delete [] Array;
+    return 0;
+}

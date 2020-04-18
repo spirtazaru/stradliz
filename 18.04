@@ -1,0 +1,62 @@
+#include<cmath>
+#include<iostream>
+using namespace std;
+char Data[1000];
+char k;
+void read()
+{
+    k = getchar();
+}
+int main()
+{
+    
+    int n;
+    cin >> n;
+    int counter = 0;
+    for(int x=0; x<=n ;x++)
+    {
+        int i = 1;
+        int y = 0;
+        read();
+        while (k != '\n')
+        {
+            Data[i] = k;
+            ++i;
+            read();
+            
+        }
+        for (int x = 1; x < i; ++x)
+        {
+            if (Data[x] == '1') y = y ^ x;
+            
+        }
+        if (y == 0)
+        {
+            cout << "Ошибок нет"<< endl << "Полученные данные: ";
+
+            
+        }
+        else
+        {
+            cout << "Ошибка в бите с номером " << y << endl << "Исправленные данныедвоичное представление";
+            if (Data[y] == '1') Data[y] = '0';
+            else Data[y] = '1';
+            
+        }
+        for (int x = 1; x < i; ++x)
+        {
+            if (fmod(log((float)x) / log(2.0), 1.0) < 0.0000001) continue;
+            else
+            {
+                cout << Data[x];
+                
+            }
+            
+        }
+        counter++;
+        cout << endl;
+        
+    }
+    return 0;
+    
+}

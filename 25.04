@@ -1,0 +1,129 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <queue>
+#include <map>
+
+using namespace std;
+
+struct Node
+
+{
+    char x;
+    int y;
+    Node* left;
+    Node* right;
+    
+};
+Node* newnode(char x, int y, Node* left, Node *right)
+{
+    Node* node = new Node();
+    node -> x = x;
+    node -> left = left;
+    node -> right = right;
+    node -> y = y;
+    return node;
+    
+}
+void code(Node* root, string str, map<char,string> &huffman)
+
+{
+    if (root == nullptr)
+    return;
+    if (!root -> left && !root -> right)
+    {
+        huffman[root -> x] = str;
+        
+    }
+    code(root -> left, str + "0", huffman);
+    code(root -> right, str + "1", huffman);
+    
+}
+void decoder(Node* root, int &index, string str)
+{
+    if (root == nullptr)
+{
+    return;
+}
+if (!root -> left && !root -> right)
+{
+    cout << root -> x;
+    return;
+}
+index++;
+if (str[index] =='0')
+{
+    decoder(root -> left, index, str);
+}
+else
+{
+    decoder(root -> right, index, str);
+}
+    
+}
+struct least
+{
+    bool operator()(Node* left, Node* right)
+    {
+        return left -> y > right -> y;
+        
+    }
+    
+};
+void Huffmancode(string text)
+
+{
+    map<char,int>y;
+    for (char x: text)
+    {
+        y[x]++;
+        
+    }
+    priority_queue<Node*, vector<Node*>, least > priority_queue;
+    for (auto pair: y)
+    {
+        priority_queue.push(newnode(pair.first, pair.second, nullptr, nullptr));
+        
+    }
+    while(priority_queue.size() != 1)
+    {
+        Node *left = priority_queue.top(); priority_queue.pop();
+        Node *right = priority_queue.top(); priority_queue.pop();
+        int sum = left -> y + right -> y;
+        priority_queue.push(newnode('\0', sum, left, right));
+        
+    }
+    Node* root = priority_queue.top();
+    map<char, string> huffman;
+    code(root, "", huffman);
+    cout << "Huffman Codes are :\n" << '\n';
+    for (auto pair: huffman)
+    {
+        cout << pair.first << " " << pair.second << '\n';
+        
+    }
+    cout << "\nNormal string was :\n" << text << '\n';
+    string str = " ";
+    for (char x: text)
+    {
+        str += huffman[x];
+        
+    }
+    cout << "\nString is:\n" << str << '\n';
+    int index = -1;
+    cout << "\nDecoded string is: \n";
+    while (index < (int)str.size() - 2)
+    {
+        decoder(root, index, str);
+        
+    }
+    
+}
+int main()
+
+{
+    string z;
+    cin >> z;
+    Huffmancode(z);
+    return 0;
+}
